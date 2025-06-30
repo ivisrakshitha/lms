@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Route, Routes, useLocation, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -27,6 +26,11 @@ import MyCourses from './components/core/Dashboard/MyCourses';
 import EditCourse from './components/core/Dashboard/EditCourse/EditCourse';
 import Instructor from './components/core/Dashboard/Instructor';
 
+import InstructorAssignments from "./components/core/Dashboard/InstructorAssignments/InstructorAssignments"
+import CreateAssignment from "./components/core/Dashboard/InstructorDashboard/CreateAssignment"
+import StudentAssignments from "./components/core/Dashboard/StudentAssignments/StudentAssignments"
+import AssignmentDetails from "./components/core/Dashboard/StudentAssignments/AssignmentDetails"
+import SubmitAssignment from "./components/core/Dashboard/StudentAssignments/SubmitAssignment"
 
 import Cart from "./components/core/Dashboard/Cart/Cart";
 import EnrolledCourses from "./components/core/Dashboard/EnrolledCourses";
@@ -38,7 +42,6 @@ import VideoDetails from './components/core/ViewCourse/VideoDetails';
 import { ACCOUNT_TYPE } from './utils/constants';
 
 import { HiArrowNarrowUp } from "react-icons/hi"
-
 
 function App() {
 
@@ -58,7 +61,6 @@ function App() {
     window.scrollTo(0, 0);
   }, [])
 
-
   // Go upward arrow - show , unshow
   const [showArrow, setShowArrow] = useState(false)
 
@@ -74,7 +76,6 @@ function App() {
       window.removeEventListener('scroll', handleArrow);
     }
   }, [showArrow])
-
 
   return (
     <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
@@ -134,9 +135,6 @@ function App() {
           }
         />
 
-
-
-
         {/* Protected Route - for Only Logged in User */}
         {/* Dashboard */}
         <Route element={
@@ -154,6 +152,9 @@ function App() {
             <>
               <Route path="dashboard/cart" element={<Cart />} />
               <Route path="dashboard/enrolled-courses" element={<EnrolledCourses />} />
+              <Route path="dashboard/student-assignments" element={<StudentAssignments />} />
+              <Route path="dashboard/assignment-details/:assignmentId" element={<AssignmentDetails />} />
+              <Route path="dashboard/submit-assignment/:assignmentId" element={<SubmitAssignment />} />
             </>
           )}
 
@@ -165,10 +166,11 @@ function App() {
               <Route path="dashboard/add-course" element={<AddCourse />} />
               <Route path="dashboard/my-courses" element={<MyCourses />} />
               <Route path="dashboard/edit-course/:courseId" element={<EditCourse />} />
+              <Route path="dashboard/instructor-assignments" element={<InstructorAssignments />} />
+              <Route path="dashboard/create-assignment" element={<CreateAssignment />} />
             </>
           )}
         </Route>
-
 
         {/* For the watching course lectures */}
         <Route
@@ -185,9 +187,6 @@ function App() {
             />
           )}
         </Route>
-
-
-
 
         {/* Page Not Found (404 Page ) */}
         <Route path="*" element={<PageNotFound />} />
