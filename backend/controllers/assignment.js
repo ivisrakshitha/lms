@@ -1,5 +1,5 @@
 // controllers/assignment.js
-const Assignment = require("../models/Assignment"); // Adjust import path
+const Assignment = require("../models/assignment"); // Adjust import path
 const Course = require("../models/course"); // Adjust import path
 const User = require("../models/user"); // Adjust import path
 
