@@ -83,8 +83,7 @@ router.post("/getFullCourseDetails", auth, getFullCourseDetails);
 router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses);
 
 // Edit Course routes
-router.post("/editCourse", auth, isInstructor, editCourse);
-
+router.put("/editCourse/:courseId", auth, isInstructor, editCourse);
 // Delete a Course
 router.delete("/deleteCourse", auth, isInstructor, deleteCourse);
 
@@ -105,7 +104,9 @@ router.get("/getCategoryPageDetails", getCategoryPageDetails);
 //                                      Rating and Review
 // ********************************************************************************************************
 router.post("/createRating", auth, isStudent, createRating);
-router.get("/getAverageRating", getAverageRating);
+// Changed to POST and added alternative GET route with query params
+router.post("/getAverageRating", getAverageRating);
+router.get("/getAverageRating", getAverageRating); // Alternative route using query params
 router.get("/getReviews", getAllRatingReview);
 
 module.exports = router;
