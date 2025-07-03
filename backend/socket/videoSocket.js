@@ -86,12 +86,10 @@ const setupVideoSocket = (io) => {
     });
 
     socket.on("ice-candidate", (data) => {
-      socket
-        .to(data.target)
-        .emit("ice-candidate", {
-          candidate: data.candidate,
-          sender: socket.id,
-        });
+      socket.to(data.target).emit("ice-candidate", {
+        candidate: data.candidate,
+        sender: socket.id,
+      });
     });
 
     // Screen sharing handlers

@@ -1,8 +1,5 @@
 const express = require("express");
-const http = require("http");
-const socketIo = require("socket.io");
 const app = express();
-const server = http.createServer(app);
 
 // packages
 const fileUpload = require("express-fileupload");
@@ -15,10 +12,6 @@ require("dotenv").config();
 const { connectDB } = require("./config/database");
 const { cloudinaryConnect } = require("./config/cloudinary");
 
-// Video call functionality
-const { setupVideoSocket } = require("./socket/videoSocket");
-const { router: videoRoutes, setVideoData } = require("./routes/videoRoutes");
-
 // routes
 const userRoutes = require("./routes/user");
 const profileRoutes = require("./routes/profile");
@@ -26,7 +19,7 @@ const paymentRoutes = require("./routes/payments");
 const courseRoutes = require("./routes/course");
 const assignmentRoutes = require("./routes/assignment");
 
-// Get local IP function for video calls
+// Get local IP function
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
   for (const devName in interfaces) {
@@ -64,51 +57,31 @@ app.use(
   })
 );
 
-// Socket.IO setup for video calls
-const io = socketIo(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-  pingTimeout: 300000,
-  pingInterval: 5000,
-});
+const PORT = process.env.LMS_PORT || 5000;
 
-// Setup video socket and get shared data
-const { rooms, users } = setupVideoSocket(io);
-setVideoData(rooms, users);
-
-const PORT = process.env.PORT || 5000;
-
-server.listen(PORT, () => {
-  console.log(`Server Started on PORT ${PORT}`);
-  console.log(`Local: http://localhost:${PORT}`);
-  console.log(`Network: http://${LOCAL_IP}:${PORT}`);
-  console.log(`Video Socket: ws://localhost:${PORT}/video`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`LMS Server Started on PORT ${PORT}`);
+  console.log(`LMS Local: http://localhost:${PORT}`);
+  console.log(`LMS Network: http://${LOCAL_IP}:${PORT}`);
 });
 
 // connections
 connectDB();
 cloudinaryConnect();
 
-// mount route
+// mount routes
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/assignments", assignmentRoutes);
 
-// Video call routes
-app.use("/api/v1/video", videoRoutes);
-
 // Default Route
 app.get("/", (req, res) => {
-  // console.log('Your server is up and running..!');
   res.send(`<div>
-    This is Default Route
+    LMS Server - Default Route
     <p>Everything is OK</p>
-    <p>Video Calling: ${rooms.size > 0 ? "Active" : "Ready"}</p>
+    <p>Server Type: Learning Management System</p>
     </div>`);
 });
 
