@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables */
+:root {
+  --richblack-900: #000814;
+  --richblack-800: #161D29;
+  --richblack-700: #2C333F;
+  --richblack-600: #424854;
+  --richblack-500: #585D69;
+  --richblack-400: #6E727F;
+  --richblack-300: #838894;
+  --richblack-200: #999DAA;
+  --richblack-100: #AFB2BF;
+  --richblack-50: #C5C7D4;
+  --richblack-25: #DBDDEA;
+  --richblack-5: #F1F2FF;
+  
+  --yellow-50: #FFF2D2;
+  --yellow-100: #FFE83D;
+  --yellow-200: #FFDB00;
+  --yellow-300: #FFD60A;
+  
+  --caribbeangreen-100: #06D6A0;
+  --caribbeangreen-200: #05BF8E;
+  --caribbeangreen-300: #05A77B;
+  --caribbeangreen-700: #014A32;
+}
+
+/* Global Styles */
+html,
+body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  font-family: 'Inter', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Custom Scrollbar */
+*::-webkit-scrollbar {
+  width: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--richblack-800);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--richblack-100);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--richblack-50);
+}
+
+/* Loading Spinner */
+.custom-loader {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: conic-gradient(#0000 15%, #ffffff);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* Custom Button Styles */
+.btn-primary {
+  @apply cursor-pointer rounded-md bg-yellow-50 px-6 py-3 font-semibold text-richblack-900 hover:bg-yellow-200 transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply cursor-pointer rounded-md bg-richblack-700 px-6 py-3 font-semibold text-richblack-5 hover:bg-richblack-600 transition-all duration-200;
+}
+
+.btn-outline {
+  @apply cursor-pointer rounded-md border border-yellow-50 bg-transparent px-6 py-3 font-semibold text-yellow-50 hover:bg-yellow-50 hover:text-richblack-900 transition-all duration-200;
+}
+
+/* Form Styles */
+.form-input {
+  @apply w-full rounded-lg bg-richblack-700 p-3 text-richblack-5 placeholder-richblack-400 focus:outline-none focus:ring-2 focus:ring-yellow-50;
+}
+
+.form-label {
+  @apply text-sm text-richblack-5 mb-1 block;
+}
+
+.form-error {
+  @apply text-xs text-pink-200 mt-1;
+}
+
+/* Card Styles */
+.card {
+  @apply rounded-xl border border-richblack-700 bg-richblack-800 p-6;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  @apply animate-pulse bg-richblack-700 rounded;
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(118.19deg, #1FA2FF -3.62%, #12D8FA 50.44%, #A6FFCB 104.51%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glass Effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
