@@ -8,7 +8,7 @@
           alt="StudyNotion Logo"
         >
       </RouterLink>
-      <h2 v-if="title" class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
         {{ title }}
       </h2>
     </div>
@@ -23,7 +23,7 @@
 defineProps({
   title: {
     type: String,
-    default: ''
+    default: 'Welcome to StudyNotion'
   }
 });
 </script>

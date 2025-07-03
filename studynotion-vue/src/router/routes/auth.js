@@ -1,11 +1,6 @@
 // src/router/routes/auth.js
 const authRoutes = [
   {
-    path: '/',
-    name: 'Home',
-    component: () => import('@/views/Home.vue')
-  },
-  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/auth/Login.vue'),

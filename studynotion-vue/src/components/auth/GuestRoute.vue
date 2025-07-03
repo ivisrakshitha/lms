@@ -11,4 +11,4 @@ import NotFound from '@/views/NotFound.vue';
 const authStore = useAuthStore();
 
 const isAuthenticated = computed(() => authStore.isAuthenticated);
-</script>   
+</script>

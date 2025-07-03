@@ -1,16 +1,18 @@
+// src/stores/auth.js
 import { defineStore } from 'pinia';
 import authService from '@/services/auth.service';
+import api from '@/services/api';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
+    token: localStorage.getItem('authToken') || null,
     isLoading: false,
-    error: null,
-    isInitialized: false
+    error: null
   }),
 
   getters: {
-    isAuthenticated: (state) => !!state.user,
+    isAuthenticated: (state) => !!state.token,
     currentUser: (state) => state.user,
     isAdmin: (state) => state.user?.accountType === 'Admin',
     isInstructor: (state) => state.user?.accountType === 'Instructor',
@@ -18,25 +20,14 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    async init() {
-      if (this.isInitialized) return;
-      
-      try {
-        const response = await authService.getCurrentUser();
-        this.user = response.user;
-        this.isInitialized = true;
-      } catch (error) {
-        this.user = null;
-        this.isInitialized = true;
-      }
-    },
-
     async login(credentials) {
       this.isLoading = true;
       this.error = null;
       try {
         const response = await authService.login(credentials);
         this.user = response.user;
+        this.token = response.token;
+        localStorage.setItem('authToken', response.token);
         return response;
       } catch (error) {
         this.error = error.message || 'Login failed';
@@ -46,19 +37,14 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async register(userData) {
+    async signup(userData) {
       this.isLoading = true;
       this.error = null;
       try {
         const response = await authService.signup(userData);
-        // Automatically log in after registration
-        await this.login({
-          email: userData.email,
-          password: userData.password
-        });
         return response;
       } catch (error) {
-        this.error = error.message || 'Registration failed';
+        this.error = error.message || 'Signup failed';
         throw error;
       } finally {
         this.isLoading = false;
@@ -93,28 +79,25 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async requestPasswordReset(email) {
+    async resetPasswordToken(email) {
       this.isLoading = true;
       this.error = null;
       try {
         const response = await authService.resetPasswordToken(email);
         return response;
       } catch (error) {
-        this.error = error.message || 'Failed to request password reset';
+        this.error = error.message || 'Failed to send reset token';
         throw error;
       } finally {
         this.isLoading = false;
       }
     },
 
-    async resetPassword(token, passwords) {
+    async resetPassword(data) {
       this.isLoading = true;
       this.error = null;
       try {
-        const response = await authService.resetPassword({
-          token,
-          ...passwords
-        });
+        const response = await authService.resetPassword(data);
         return response;
       } catch (error) {
         this.error = error.message || 'Password reset failed';
@@ -124,13 +107,21 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async logout() {
-      try {
-        await authService.logout();
-        this.user = null;
-      } catch (error) {
-        this.error = error.message || 'Logout failed';
-        throw error;
+    logout() {
+      authService.logout();
+      this.user = null;
+      this.token = null;
+    },
+
+    async fetchUser() {
+      if (this.token) {
+        try {
+          // You'll need to implement this endpoint in your backend
+          const response = await api.get('/auth/me');
+          this.user = response.data.user;
+        } catch (error) {
+          this.logout();
+        }
       }
     }
   }
