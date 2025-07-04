@@ -304,7 +304,7 @@ const projects = ref([
   @apply px-3 py-1 text-sm rounded-md text-gray-600 hover:bg-gray-100;
 }
 .chart-period-btn.active {
-  @apply bg-primary text-white hover:bg-primary-dark;
+  @apply bg-blue-600 text-white hover:bg-blue-700;
 }
 
 table {
@@ -337,15 +337,19 @@ td {
   @apply w-full bg-gray-200 rounded-full h-2.5 relative;
 }
 .progress-bar {
-  @apply bg-primary h-2.5 rounded-full absolute top-0 left-0;
+  @apply bg-blue-600 h-2.5 rounded-full absolute top-0 left-0;
 }
+
+
 .progress-text {
   @apply text-xs text-gray-500 absolute -right-6 top-1/2 transform -translate-y-1/2;
 }
 
 .btn-primary {
-  @apply bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-md text-sm font-medium;
+  @apply bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium;
 }
+
+
 .action-btn {
   @apply text-gray-400 hover:text-gray-600;
 }

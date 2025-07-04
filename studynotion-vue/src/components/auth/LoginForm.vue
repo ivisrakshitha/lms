@@ -91,12 +91,12 @@
 
 <script setup>
 import { ref } from 'vue';
-// import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import BaseCheckbox from '@/components/common/BaseCheckbox.vue';
 
+const router = useRouter();
 const authStore = useAuthStore();
-// const router = useRouter();
 
 const email = ref('');
 const password = ref('');
@@ -108,32 +108,32 @@ const loginSuccess = ref(false);
 const handleLogin = async () => {
   errors.value = {};
   loginSuccess.value = false;
- 
-  // Simple validation
+
   if (!email.value) errors.value.email = 'Email is required';
   if (!password.value) errors.value.password = 'Password is required';
- 
+
   if (Object.keys(errors.value).length > 0) return;
- 
+
   try {
     await authStore.login({
       email: email.value,
       password: password.value
     });
-   
-    // Show success message
+
     loginSuccess.value = true;
     console.log('Logged in successfully!');
-   
-    // Clear form
+
+    router.push("/dashboard");
+
     email.value = '';
     password.value = '';
-   
+
   } catch (error) {
     console.error('Login error:', error);
   }
 };
 </script>
+
 
 <style scoped>
 /* Updated custom colors for proper dark theme */
