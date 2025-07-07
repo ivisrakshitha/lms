@@ -1,9 +1,9 @@
 <template>
-  <nav class="text-sm text-gray-500 mb-4" v-if="breadcrumbs.length">
+  <nav class="text-sm text-gray-500 mb-4">
     <ol class="flex items-center space-x-2">
       <template v-for="(crumb, index) in breadcrumbs" :key="index">
-        <span v-if="index !== 0">/</span>
-        <li>
+        <li v-if="index !== 0" class="flex items-center space-x-2">
+          <span>/</span>
           <router-link :to="crumb.path" class="hover:underline text-primary">
             {{ crumb.label }}
           </router-link>
