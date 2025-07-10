@@ -43,7 +43,7 @@
 <script>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/useAuthStore'
+import { useAuthStore } from '@/stores/auth.js'
 import { storeToRefs } from 'pinia'
 
 export default {

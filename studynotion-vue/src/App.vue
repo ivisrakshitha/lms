@@ -48,7 +48,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/useAuthStore'
+import { useAuthStore } from '@/stores/auth.js'
 import { ArrowUpIcon } from '@heroicons/vue/24/outline'
 
 // Layout components
