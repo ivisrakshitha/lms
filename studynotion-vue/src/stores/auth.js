@@ -80,43 +80,62 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async resetPasswordToken(email) {
-      this.isLoading = true;
-      this.error = null;
-      try {
-        const response = await authService.resetPasswordToken(email);
-        return response;
-      } catch (error) {
-        this.error = error.message || 'Failed to send reset token';
-        throw error;
-      } finally {
-        this.isLoading = false;
-      }
-    },
+    this.isLoading = true;
+    this.error = null;
+    try {
+      const response = await authService.resetPasswordToken(email);
+      return response;
+    } catch (error) {
+      this.error = error.response?.data?.message || error.message || 'Failed to send OTP';
+      throw error;
+    } finally {
+      this.isLoading = false;
+    }
+  },
 
-    async resetPassword(data) {
-      this.isLoading = true;
-      this.error = null;
-      try {
-        const response = await authService.resetPassword(data);
-        return response;
-      } catch (error) {
-        this.error = error.message || 'Password reset failed';
-        throw error;
-      } finally {
-        this.isLoading = false;
-      }
-    },
+  async verifyOTP({ email, otp }) {
+    this.isLoading = true;
+    this.error = null;
+    try {
+      const response = await authService.verifyOTP({ email, otp });
+      return response;
+    } catch (error) {
+      this.error = error.response?.data?.message || error.message || 'Invalid OTP';
+      throw error;
+    } finally {
+      this.isLoading = false;
+    }
+  },
+
+  async resetPassword({ email, otp, password, confirmPassword }) {
+    this.isLoading = true;
+    this.error = null;
+    try {
+      const response = await authService.resetPassword({ 
+        email, 
+        otp, 
+        password, 
+        confirmPassword 
+      });
+      return response;
+    } catch (error) {
+      this.error = error.response?.data?.message || error.message || 'Password reset failed';
+      throw error;
+    } finally {
+      this.isLoading = false;
+    }
+  },
 
     logout() {
       authService.logout();
       this.user = null;
       this.token = null;
+      localStorage.removeItem('authToken');
     },
 
     async fetchUser() {
       if (this.token) {
         try {
-          // You'll need to implement this endpoint in your backend
           const response = await api.get('/auth/me');
           this.user = response.data.user;
         } catch (error) {

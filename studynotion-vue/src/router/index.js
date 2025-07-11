@@ -36,7 +36,24 @@ const routes = [
     path: '/courses',
     name: 'Courses',
     component: () => import('../views/courses/CoursesList.vue')
-  }
+  },
+  {
+  path: '/forgot-password',
+  name: 'ForgotPassword',
+  component: () => import('@/views/auth/ForgotPassword.vue'),
+},
+{
+  path: '/verify-otp',
+  name: 'VerifyOTP',
+  component: () => import('@/views/auth/VerifyOTP.vue'),
+  props: (route) => ({ email: route.query.email, purpose: route.query.purpose })
+},
+{
+  path: '/reset-password',
+  name: 'ResetPassword',
+  component: () => import('@/views/auth/ResetPassword.vue'),
+  props: (route) => ({ email: route.query.email, otp: route.query.otp })
+}
 ]
 
 const router = createRouter({

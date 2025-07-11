@@ -20,26 +20,22 @@ const authRoutes = [
       onlyGuest: true
     }
   },
-  {
-    path: '/forgot-password',
-    name: 'ForgotPassword',
-    component: () => import('@/views/auth/ForgotPassword.vue'),
-    meta: {
-      layout: 'AuthLayout',
-      requiresAuth: false,
-      onlyGuest: true
-    }
-  },
-  {
-    path: '/reset-password',
-    name: 'ResetPassword',
-    component: () => import('@/views/auth/ResetPassword.vue'),
-    meta: {
-      layout: 'AuthLayout',
-      requiresAuth: false,
-      onlyGuest: true
-    }
-  }
+  // In your router file
+{
+  path: '/forgot-password',
+  name: 'ForgotPassword',
+  component: () => import('@/views/auth/ForgotPassword.vue'),
+},
+{
+  path: '/verify-otp',
+  name: 'VerifyOTP',
+  component: () => import('@/views/auth/VerifyOTP.vue'),
+},
+{
+  path: '/reset-password',
+  name: 'ResetPassword',
+  component: () => import('@/views/auth/ResetPassword.vue'),
+}
 ];
 
 export default authRoutes;

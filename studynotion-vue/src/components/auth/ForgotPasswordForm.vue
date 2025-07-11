@@ -1,69 +1,138 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="auth-form">
-    <h2 class="text-2xl font-bold mb-6 text-center">Forgot Password</h2>
+  <div class="forgot-password-form">
+    <h2 class="form-title">Forgot Password</h2>
+    <p class="form-subtitle">Enter your email to receive a password reset link</p>
     
-    <p class="text-gray-600 mb-6 text-center">
-      Enter your email address and we'll send you a link to reset your password.
-    </p>
+    <form @submit.prevent="handleSubmit" class="auth-form">
+      <BaseInput
+        v-model="email"
+        type="email"
+        label="Email Address"
+        placeholder="Enter your email"
+        required
+        :error="errors.email"
+        @blur="validateEmail"
+      />
+      
+      <BaseButton
+        type="submit"
+        :loading="isLoading"
+        class="submit-btn"
+      >
+        Send Reset Link
+      </BaseButton>
+      
+      <div class="form-footer">
+        <router-link to="/login" class="link">Back to Login</router-link>
+      </div>
+    </form>
     
-    <BaseInput
-      v-model="email"
-      type="email"
-      label="Email"
-      placeholder="Enter your email"
-      required
-      :error="errors.email"
+    <Toast
+      v-if="showToast"
+      :message="toastMessage"
+      :type="toastType"
+      @close="showToast = false"
     />
-    
-    <BaseButton
-      type="submit"
-      :loading="authStore.isLoading"
-      class="w-full mt-4"
-    >
-      Send Reset Link
-    </BaseButton>
-    
-    <div v-if="authStore.error" class="mt-4 text-red-500 text-center">
-      {{ authStore.error }}
-    </div>
-    
-    <div v-if="isSuccess" class="mt-4 text-green-500 text-center">
-      Password reset link has been sent to your email.
-    </div>
-    
-    <div class="mt-6 text-center">
-      <RouterLink to="/login" class="text-primary hover:underline">
-        Back to login
-      </RouterLink>
-    </div>
-  </form>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 import BaseInput from '@/components/common/BaseInput.vue';
 import BaseButton from '@/components/common/BaseButton.vue';
+import Toast from '@/components/ui/Toast.vue';
+import { useAuthStore } from '@/stores/auth';
+import { validateEmail as validateEmailFn } from '@/utils/validators';
 
 const authStore = useAuthStore();
+const router = useRouter();
 
 const email = ref('');
-const isSuccess = ref(false);
-const errors = ref({});
+const errors = ref({
+  email: ''
+});
+const isLoading = ref(false);
+const showToast = ref(false);
+const toastMessage = ref('');
+const toastType = ref('');
+
+const validateEmail = () => {
+  errors.value.email = validateEmailFn(email.value);
+};
 
 const handleSubmit = async () => {
-  errors.value = {};
+  validateEmail();
   
-  if (!email.value) {
-    errors.value.email = 'Email is required';
-    return;
-  }
+  if (errors.value.email) return;
   
   try {
-    await authStore.resetPasswordToken(email.value);
-    isSuccess.value = true;
+    isLoading.value = true;
+    await authStore.sendPasswordResetToken(email.value);
+    
+    toastMessage.value = 'Password reset link sent to your email';
+    toastType.value = 'success';
+    showToast.value = true;
+    
+    // Redirect to reset password page after a delay
+    setTimeout(() => {
+      router.push('/reset-password');
+    }, 3000);
   } catch (error) {
-    console.error('Forgot password error:', error);
+    toastMessage.value = error.message || 'Failed to send reset link';
+    toastType.value = 'error';
+    showToast.value = true;
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>
+
+<style scoped>
+.forgot-password-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.form-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.submit-btn {
+  margin-top: 0.5rem;
+}
+
+.form-footer {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.link {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+</style>

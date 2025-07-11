@@ -39,22 +39,30 @@ export default {
   },
 
   async resetPasswordToken(email) {
-    try {
-      const response = await api.post('/auth/reset-password-token', { email });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
+  try {
+    const response = await api.post('/auth/reset-password-token', { email });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to send OTP');
+  }
+},
 
-  async resetPassword(data) {
-    try {
-      const response = await api.post('/auth/reset-password', data);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
+
+async resetPassword({ email, otp, password, confirmPassword }) {
+  try {
+    const response = await api.post('/auth/reset-password', {
+      email,        // Required by backend
+      otp,          // Required by backend (not token)
+      password,     // Required by backend
+      confirmPassword // Required by backend
+    });
+    return response.data;
+  } catch (error) {
+    const errorMsg = error.response?.data?.message || 
+                    'Password reset failed';
+    throw new Error(errorMsg);
+  }
+},
 
   async logout() {
     try {
@@ -63,6 +71,14 @@ export default {
       // You might also want to call a backend logout endpoint if available
     } catch (error) {
       console.error('Logout error:', error);
+    }
+  },
+  async sendPasswordResetToken(email) {
+    try {
+      const response = await api.post('/auth/reset-password-token', { email });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to send reset password token');
     }
   }
 };
